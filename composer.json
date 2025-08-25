@@ -1,0 +1,65 @@
+{
+  "name": "avnsh1111/filament-dynamic-form-builder",
+  "description": "Filament v4 plugin: fully functional dynamic form builder (create, render, collect submissions).",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "filament",
+    "laravel",
+    "plugin",
+    "forms",
+    "builder",
+    "livewire"
+  ],
+  "homepage": "https://github.com/Avnsh1111/filament-dynamic-form-builder",
+  "support": {
+    "issues": "https://github.com/Avnsh1111/filament-dynamic-form-builder/issues",
+    "source": "https://github.com/Avnsh1111/filament-dynamic-form-builder"
+  },
+  "authors": [
+    {
+      "name": "Avinash Rathod",
+      "email": "er.avinashrathod@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^10.0|^11.0",
+    "filament/filament": "^4.0",
+    "filament/forms": "^4.0",
+    "filament/schemas": "^4.0",
+    "filament/notifications": "^4.0",
+    "livewire/livewire": "^3.0",
+    "spatie/laravel-package-tools": "^1.16"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0|^9.0",
+    "phpunit/phpunit": "^10.0|^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Avnsh1111\\FilamentDynamicFormBuilder\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Avnsh1111\\FilamentDynamicFormBuilder\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Avnsh1111\\FilamentDynamicFormBuilder\\FilamentDynamicFormBuilderServiceProvider"
+      ]
+    },
+    "branch-alias": {
+      "dev-main": "1.x-dev"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "phpunit"
+  }
+}
