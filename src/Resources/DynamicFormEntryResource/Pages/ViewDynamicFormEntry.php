@@ -7,6 +7,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\TextEntry;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -23,7 +24,9 @@ class ViewDynamicFormEntry extends ViewRecord
         $rawData = DB::table('dynamic_form_entries')->where('id', $recordId)->first();
         
         return $schema
+            ->columns(2)
             ->schema([
+                // Form Details section - left column
                 Section::make('Form Details')
                     ->schema([
                         \Filament\Infolists\Components\TextEntry::make('id')
@@ -35,11 +38,16 @@ class ViewDynamicFormEntry extends ViewRecord
                         \Filament\Infolists\Components\TextEntry::make('created_at')
                             ->label('Submitted At')
                             ->dateTime(),
-                    ]),
+                    ])
+                    ->columnSpan(1),
                     
-                $this->buildFormDataSection($rawData),
+                // Metadata section - right column
+                $this->buildMetadataSection($rawData)
+                    ->columnSpan(1),
                 
-                $this->buildMetadataSection($rawData),
+                // Form Data section - full width bottom
+                $this->buildFormDataSection($rawData)
+                    ->columnSpanFull(),
             ]);
     }
     
@@ -83,7 +91,10 @@ class ViewDynamicFormEntry extends ViewRecord
         }
         
         return Section::make('Metadata')
-            ->schema($entries)
+            ->schema([
+                Grid::make(1)
+                    ->schema($entries)
+            ])
             ->collapsible();
     }
     

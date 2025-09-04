@@ -87,544 +87,544 @@ class DynamicFormResource extends Resource
                                 ->blocks([
 
                                     // Section block
-                                    Builder\Block::make('section')
-                                        ->label('Section')
-                                        ->schema([
-
-                                                    Grid::make(2)
-                                                        ->schema([
-                                                            TextInput::make('heading')->required(),
-                                                            Textarea::make('description'),
-                                                            Toggle::make('collapsible'),
-                                                            Toggle::make('collapsed')
-                                                                ->visible(fn (Get $get): bool => $get('collapsible')),
-                                                            Forms\Components\Select::make('grid')
-                                                                ->label('Layout Grid')
-                                                                ->options([
-                                                                    1 => '1 field per row',
-                                                                    2 => '2 fields per row',
-                                                                    3 => '3 fields per row',
-                                                                    4 => '4 fields per row',
-                                                                ])
-                                                                ->default(2)
-                                                                ->selectablePlaceholder(false),
-                                                        ]),
-
-                                                
-                                            Builder::make('fields')
-                                                ->label('Section Fields')
-                                                ->collapsible()
-                                                ->collapsed()
-                                                ->blocks([
-                                                    // Text input block
-                                                    Builder\Block::make('text_input')
-                                                        ->label('Text Input')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->live(onBlur: true)
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            TextInput::make('placeholder'),
-                                                                            Toggle::make('required'),
-                                                                            TextInput::make('default'),
-                                                                            TextInput::make('min')->numeric()->minValue(0)->nullable(),
-                                                                            TextInput::make('max')->numeric()->nullable(),
-                                                                            TextInput::make('regex')->helperText('Optional validation regex.'),
-                                                                        ]),
-
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Textarea block
-                                                    Builder\Block::make('textarea')
-                                                        ->label('Textarea')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            TextInput::make('placeholder'),
-                                                                            Toggle::make('required'),
-                                                                            TextInput::make('rows')->numeric()->default(3),
-                                                                        ]),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Rich Editor block
-                                                    Builder\Block::make('rich_editor')
-                                                        ->label('Rich Editor')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                        ]),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default('full')
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Number block
-                                                    Builder\Block::make('number')
-                                                        ->label('Number')
-                                                        ->schema([
-
-                                                                    Grid::make(1)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                            TextInput::make('default')->numeric(),
-                                                                            TextInput::make('min')->numeric()->nullable(),
-                                                                            TextInput::make('max')->numeric()->nullable(),
-                                                                            TextInput::make('step')->numeric()->nullable(),
-                                                                        ]),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Select block
-                                                    Builder\Block::make('select')
-                                                        ->label('Select')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            TextInput::make('placeholder'),
-                                                                            Toggle::make('required'),
-                                                                            Toggle::make('multiple'),
-                                                                            Toggle::make('searchable'),
-                                                                        ]),
-
-                                                                    Forms\Components\Repeater::make('options')
-                                                                        ->schema([
-                                                                            TextInput::make('label')->required(),
-                                                                            TextInput::make('value')->required(),
-                                                                        ])
-                                                                        ->defaultItems(2)
-                                                                        ->collapsed()
-                                                                        ->columnSpanFull(),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Checkbox block
-                                                    Builder\Block::make('checkbox')
-                                                        ->label('Checkbox')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                            Toggle::make('default'),
-                                                                        ]),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Toggle block
-                                                    Builder\Block::make('toggle')
-                                                        ->label('Toggle')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                            Toggle::make('default'),
-                                                                        ]),
-
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Date Time block
-                                                    Builder\Block::make('date_time')
-                                                        ->label('Date & Time')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                            Forms\Components\Select::make('type')
-                                                                                ->label('Date/Time Type')
-                                                                                ->options([
-                                                                                    'datetime' => 'Date and Time',
-                                                                                    'date' => 'Date only',
-                                                                                    'time' => 'Time only',
-                                                                                ])
-                                                                                ->default('datetime')
-                                                                                ->required(),
-                                                                        ]),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // File Upload block
-                                                    Builder\Block::make('file_upload')
-                                                        ->label('File Upload')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                            Toggle::make('multiple'),
-                                                                            TextInput::make('directory')->helperText('Storage directory (optional)'),
-                                                                        ]),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Radio block
-                                                    Builder\Block::make('radio')
-                                                        ->label('Radio')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                        ]),
-
-                                                                    Forms\Components\Repeater::make('options')
-                                                                        ->schema([
-                                                                            TextInput::make('label')->required(),
-                                                                            TextInput::make('value')->required(),
-                                                                        ])
-                                                                        ->defaultItems(2)
-                                                                        ->collapsed()
-                                                                        ->columnSpanFull(),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-
-                                                    // Checkbox List block
-                                                    Builder\Block::make('checkbox_list')
-                                                        ->label('Checkbox List')
-                                                        ->schema([
-
-                                                                    Grid::make(2)
-                                                                        ->schema([
-                                                                            TextInput::make('name')
-                                                                                ->required()
-                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                                ->live(onBlur: true),
-
-                                                                            TextInput::make('label')
-                                                                                ->required()
-                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
-
-                                                                            Toggle::make('required'),
-                                                                        ]),
-
-                                                                    Forms\Components\Repeater::make('options')
-                                                                        ->schema([
-                                                                            TextInput::make('label')->required(),
-                                                                            TextInput::make('value')->required(),
-                                                                        ])
-                                                                        ->defaultItems(3)
-                                                                        ->collapsed()
-                                                                        ->columnSpanFull(),
-
-                                                            Forms\Components\Select::make('columnSpan')
-                                                                ->label('Column Width')
-                                                                ->options([
-                                                                    1 => 'Default (1 column)',
-                                                                    2 => 'Wide (2 columns)',
-                                                                    'full' => 'Full width',
-                                                                ])
-                                                                ->default(1)
-                                                                ->columnSpanFull(),
-
-                                                            Forms\Components\Repeater::make('attributes')
-                                                                ->label('Custom HTML Attributes')
-                                                                ->schema([
-                                                                    TextInput::make('key'),
-                                                                    TextInput::make('value'),
-                                                                ])
-                                                                ->collapsed()
-                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                                                ->columnSpanFull(),
-                                                        ]),
-                                                ])->columnSpanFull(),
-                                        ]),
+//                                    Builder\Block::make('section')
+//                                        ->label('Section')
+//                                        ->schema([
+//
+//                                                    Grid::make(2)
+//                                                        ->schema([
+//                                                            TextInput::make('heading')->required(),
+//                                                            Textarea::make('description'),
+//                                                            Toggle::make('collapsible'),
+//                                                            Toggle::make('collapsed')
+//                                                                ->visible(fn (Get $get): bool => $get('collapsible')),
+//                                                            Forms\Components\Select::make('grid')
+//                                                                ->label('Layout Grid')
+//                                                                ->options([
+//                                                                    1 => '1 field per row',
+//                                                                    2 => '2 fields per row',
+//                                                                    3 => '3 fields per row',
+//                                                                    4 => '4 fields per row',
+//                                                                ])
+//                                                                ->default(2)
+//                                                                ->selectablePlaceholder(false),
+//                                                        ]),
+//
+//
+//                                            Builder::make('fields')
+//                                                ->label('Section Fields')
+//                                                ->collapsible()
+//                                                ->collapsed()
+//                                                ->blocks([
+//                                                    // Text input block
+//                                                    Builder\Block::make('text_input')
+//                                                        ->label('Text Input')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->live(onBlur: true)
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            TextInput::make('placeholder'),
+//                                                                            Toggle::make('required'),
+//                                                                            TextInput::make('default'),
+//                                                                            TextInput::make('min')->numeric()->minValue(0)->nullable(),
+//                                                                            TextInput::make('max')->numeric()->nullable(),
+//                                                                            TextInput::make('regex')->helperText('Optional validation regex.'),
+//                                                                        ]),
+//
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Textarea block
+//                                                    Builder\Block::make('textarea')
+//                                                        ->label('Textarea')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            TextInput::make('placeholder'),
+//                                                                            Toggle::make('required'),
+//                                                                            TextInput::make('rows')->numeric()->default(3),
+//                                                                        ]),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Rich Editor block
+//                                                    Builder\Block::make('rich_editor')
+//                                                        ->label('Rich Editor')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                        ]),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default('full')
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Number block
+//                                                    Builder\Block::make('number')
+//                                                        ->label('Number')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(1)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                            TextInput::make('default')->numeric(),
+//                                                                            TextInput::make('min')->numeric()->nullable(),
+//                                                                            TextInput::make('max')->numeric()->nullable(),
+//                                                                            TextInput::make('step')->numeric()->nullable(),
+//                                                                        ]),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Select block
+//                                                    Builder\Block::make('select')
+//                                                        ->label('Select')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            TextInput::make('placeholder'),
+//                                                                            Toggle::make('required'),
+//                                                                            Toggle::make('multiple'),
+//                                                                            Toggle::make('searchable'),
+//                                                                        ]),
+//
+//                                                                    Forms\Components\Repeater::make('options')
+//                                                                        ->schema([
+//                                                                            TextInput::make('label')->required(),
+//                                                                            TextInput::make('value')->required(),
+//                                                                        ])
+//                                                                        ->defaultItems(2)
+//                                                                        ->collapsed()
+//                                                                        ->columnSpanFull(),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Checkbox block
+//                                                    Builder\Block::make('checkbox')
+//                                                        ->label('Checkbox')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                            Toggle::make('default'),
+//                                                                        ]),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Toggle block
+//                                                    Builder\Block::make('toggle')
+//                                                        ->label('Toggle')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                            Toggle::make('default'),
+//                                                                        ]),
+//
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Date Time block
+//                                                    Builder\Block::make('date_time')
+//                                                        ->label('Date & Time')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                            Forms\Components\Select::make('type')
+//                                                                                ->label('Date/Time Type')
+//                                                                                ->options([
+//                                                                                    'datetime' => 'Date and Time',
+//                                                                                    'date' => 'Date only',
+//                                                                                    'time' => 'Time only',
+//                                                                                ])
+//                                                                                ->default('datetime')
+//                                                                                ->required(),
+//                                                                        ]),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // File Upload block
+//                                                    Builder\Block::make('file_upload')
+//                                                        ->label('File Upload')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                            Toggle::make('multiple'),
+//                                                                            TextInput::make('directory')->helperText('Storage directory (optional)'),
+//                                                                        ]),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Radio block
+//                                                    Builder\Block::make('radio')
+//                                                        ->label('Radio')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                        ]),
+//
+//                                                                    Forms\Components\Repeater::make('options')
+//                                                                        ->schema([
+//                                                                            TextInput::make('label')->required(),
+//                                                                            TextInput::make('value')->required(),
+//                                                                        ])
+//                                                                        ->defaultItems(2)
+//                                                                        ->collapsed()
+//                                                                        ->columnSpanFull(),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//
+//                                                    // Checkbox List block
+//                                                    Builder\Block::make('checkbox_list')
+//                                                        ->label('Checkbox List')
+//                                                        ->schema([
+//
+//                                                                    Grid::make(2)
+//                                                                        ->schema([
+//                                                                            TextInput::make('name')
+//                                                                                ->required()
+//                                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+//                                                                                ->helperText('Key (a-z, 0-9, underscore).')
+//                                                                                ->live(onBlur: true),
+//
+//                                                                            TextInput::make('label')
+//                                                                                ->required()
+//                                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+//
+//                                                                            Toggle::make('required'),
+//                                                                        ]),
+//
+//                                                                    Forms\Components\Repeater::make('options')
+//                                                                        ->schema([
+//                                                                            TextInput::make('label')->required(),
+//                                                                            TextInput::make('value')->required(),
+//                                                                        ])
+//                                                                        ->defaultItems(3)
+//                                                                        ->collapsed()
+//                                                                        ->columnSpanFull(),
+//
+//                                                            Forms\Components\Select::make('columnSpan')
+//                                                                ->label('Column Width')
+//                                                                ->options([
+//                                                                    1 => 'Default (1 column)',
+//                                                                    2 => 'Wide (2 columns)',
+//                                                                    'full' => 'Full width',
+//                                                                ])
+//                                                                ->default(1)
+//                                                                ->columnSpanFull(),
+//
+//                                                            Forms\Components\Repeater::make('attributes')
+//                                                                ->label('Custom HTML Attributes')
+//                                                                ->schema([
+//                                                                    TextInput::make('key'),
+//                                                                    TextInput::make('value'),
+//                                                                ])
+//                                                                ->collapsed()
+//                                                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+//                                                                ->columnSpanFull(),
+//                                                        ]),
+//                                                ])->columnSpanFull(),
+//                                        ]),
 
 
 
