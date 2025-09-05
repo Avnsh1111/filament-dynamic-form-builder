@@ -4,12 +4,17 @@ namespace Avnsh1111\FilamentDynamicFormBuilder\Resources\DynamicFormEntryResourc
 
 use Avnsh1111\FilamentDynamicFormBuilder\Resources\DynamicFormEntryResource;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\TextEntry;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Filament\Actions\Action;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action as InfolistAction;
 
 class ViewDynamicFormEntry extends ViewRecord
 {
@@ -54,12 +59,23 @@ class ViewDynamicFormEntry extends ViewRecord
     protected function buildFormDataSection($rawData): Section
     {
         $formData = $this->parseJsonData($rawData->data ?? '{}');
+        $record = $this->getRecord();
+        $formSchema = $record->form->schema ?? [];
 
         $entries = [];
         foreach ($formData as $key => $value) {
-            $entries[] = \Filament\Infolists\Components\TextEntry::make("form_data.{$key}")
-                ->label($key)
-                ->state($value);
+            // Check if this field is a file upload field
+            $fieldType = $this->getFieldType($key, $formSchema);
+            
+            if ($fieldType === 'file_upload' && !empty($value)) {
+                // Handle file upload fields with view/download actions
+                $entries[] = $this->createFileUploadEntry($key, $value);
+            } else {
+                // Handle regular fields
+                $entries[] = \Filament\Infolists\Components\TextEntry::make("form_data.{$key}")
+                    ->label($key)
+                    ->state($this->formatFieldValue($value));
+            }
         }
         
         if (empty($entries)) {
@@ -150,5 +166,71 @@ class ViewDynamicFormEntry extends ViewRecord
         
         // If all parsing attempts fail, return empty array
         return [];
+    }
+    
+    /**
+     * Get the field type from the form schema
+     */
+    protected function getFieldType(string $fieldName, array $formSchema): ?string
+    {
+        foreach ($formSchema as $block) {
+            $data = $block['data'] ?? [];
+            if (isset($data['name']) && $data['name'] === $fieldName) {
+                return $block['type'] ?? null;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Create a file upload entry with view/download actions
+     */
+    protected function createFileUploadEntry(string $key, $value): Group
+    {
+        $files = is_array($value) ? $value : [$value];
+        
+        $actions = [];
+        foreach ($files as $index => $filePath) {
+            if (empty($filePath)) continue;
+            
+            $fileName = basename($filePath);
+            $actions[] = InfolistAction::make("view_file_{$key}_{$index}")
+                ->label($fileName)
+                ->icon('heroicon-o-eye')
+                ->color('primary')
+                ->url(fn () => Storage::url($filePath))
+                ->openUrlInNewTab();
+                
+//            $actions[] = InfolistAction::make("download_file_{$key}_{$index}")
+//                ->label('Download')
+//                ->icon('heroicon-o-arrow-down-tray')
+//                ->color('success')
+//                ->action(fn () => Storage::download($filePath, $fileName));
+        }
+        
+        return Group::make([
+            \Filament\Infolists\Components\TextEntry::make("file_label_{$key}")
+                ->label($key)
+                ->state(count($files) . ' file(s) uploaded')
+                ->columnSpanFull(),
+            Actions::make($actions)
+                ->columnSpanFull()
+        ]);
+    }
+    
+    /**
+     * Format field value for display
+     */
+    protected function formatFieldValue($value): string
+    {
+        if (is_array($value)) {
+            return implode(', ', $value);
+        }
+        
+        if (is_bool($value)) {
+            return $value ? 'Yes' : 'No';
+        }
+        
+        return (string) $value;
     }
 }

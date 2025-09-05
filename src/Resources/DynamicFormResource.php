@@ -1022,29 +1022,29 @@ class DynamicFormResource extends Resource
                                         ->label(fn (array $state = null): string => $state['label'] ?? 'Radio')
                                         ->schema([
 
-                                                    Grid::make(2)
-                                                        ->schema([
-                                                            TextInput::make('name')
-                                                                ->required()
-                                                                ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
-                                                                ->helperText('Key (a-z, 0-9, underscore).')
-                                                                ->live(onBlur: true),
+                                            Grid::make(2)
+                                                ->schema([
+                                                    TextInput::make('name')
+                                                        ->required()
+                                                        ->regex('/^[a-zA-Z_][a-zA-Z0-9_]*$/')
+                                                        ->helperText('Key (a-z, 0-9, underscore).')
+                                                        ->live(onBlur: true),
 
-                                                            TextInput::make('label')
-                                                                ->required()
-                                                                ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
+                                                    TextInput::make('label')
+                                                        ->required()
+                                                        ->dehydrateStateUsing(fn ($state, $get) => $state ?: ucwords(str_replace('_', ' ', $get('name')))),
 
-                                                            Toggle::make('required'),
-                                                        ]),
+                                                    Toggle::make('required'),
+                                                ]),
 
-                                                    Forms\Components\Repeater::make('options')
-                                                        ->schema([
-                                                            TextInput::make('label')->required(),
-                                                            TextInput::make('value')->required(),
-                                                        ])
-                                                        ->defaultItems(2)
-                                                        ->collapsed()
-                                                        ->columnSpanFull(),
+                                            Forms\Components\Repeater::make('options')
+                                                ->schema([
+                                                    TextInput::make('label')->required(),
+                                                    TextInput::make('value')->required(),
+                                                ])
+                                                ->defaultItems(2)
+                                                ->collapsed()
+                                                ->columnSpanFull(),
 
                                             Forms\Components\Select::make('columnSpan')
                                                 ->label('Column Width')
