@@ -84,6 +84,7 @@ class DynamicFormResource extends Resource
                                 ->label('Form Schema')
                                 ->collapsed()
                                 ->collapsible()
+                                ->blockNumbers(false)
                                 ->blocks([
 
                                     // Section block
@@ -630,7 +631,7 @@ class DynamicFormResource extends Resource
 
                                     // Text input block
                                     Builder\Block::make('text_input')
-                                        ->label('Text Input')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Text Input')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -676,7 +677,7 @@ class DynamicFormResource extends Resource
                                         ])->columns(1),
 
                                     Builder\Block::make('textarea')
-                                        ->label('Textarea')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Textarea')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -710,7 +711,7 @@ class DynamicFormResource extends Resource
                                         ])->columns(1),
 
                                     Builder\Block::make('select')
-                                        ->label('Select')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Select')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -761,7 +762,7 @@ class DynamicFormResource extends Resource
                                                 ->columnSpanFull(),
                                         ])->columns(1),
                                     Builder\Block::make('checkbox')
-                                        ->label('Checkbox')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Checkbox')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -802,7 +803,7 @@ class DynamicFormResource extends Resource
                                         ])->columns(1),
 
                                     Builder\Block::make('toggle')
-                                        ->label('Toggle')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Toggle')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -843,7 +844,7 @@ class DynamicFormResource extends Resource
                                         ]),
 
                                     Builder\Block::make('number')
-                                        ->label('Number')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Number')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -887,7 +888,7 @@ class DynamicFormResource extends Resource
                                         ]),
 
                                     Builder\Block::make('date_time')
-                                        ->label('Date & Time')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Date & Time')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -936,7 +937,7 @@ class DynamicFormResource extends Resource
                                         ]),
 
                                     Builder\Block::make('file_upload')
-                                        ->label('File Upload')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'File Upload')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -978,7 +979,7 @@ class DynamicFormResource extends Resource
                                         ]),
 
                                     Builder\Block::make('rich_editor')
-                                        ->label('Rich Editor')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Rich Editor')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -1018,7 +1019,7 @@ class DynamicFormResource extends Resource
                                         ])->columns(1),
 
                                     Builder\Block::make('radio')
-                                        ->label('Radio')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Radio')
                                         ->schema([
 
                                                     Grid::make(2)
@@ -1067,7 +1068,7 @@ class DynamicFormResource extends Resource
                                         ]),
 
                                     Builder\Block::make('checkbox_list')
-                                        ->label('Checkbox List')
+                                        ->label(fn (array $state = null): string => $state['label'] ?? 'Checkbox List')
                                         ->schema([
 
                                                     Grid::make(2)
