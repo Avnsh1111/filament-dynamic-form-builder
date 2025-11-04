@@ -189,33 +189,67 @@ class ViewDynamicFormEntry extends ViewRecord
     {
         $files = is_array($value) ? $value : [$value];
         
-        $actions = [];
+        $components = [];
+        $imageComponents = [];
+        $nonImageActions = [];
+        
         foreach ($files as $index => $filePath) {
             if (empty($filePath)) continue;
             
             $fileName = basename($filePath);
-            $actions[] = InfolistAction::make("view_file_{$key}_{$index}")
-                ->label($fileName)
-                ->icon('heroicon-o-eye')
-                ->color('primary')
-                ->url(fn () => Storage::url($filePath))
-                ->openUrlInNewTab();
-                
-//            $actions[] = InfolistAction::make("download_file_{$key}_{$index}")
-//                ->label('Download')
-//                ->icon('heroicon-o-arrow-down-tray')
-//                ->color('success')
-//                ->action(fn () => Storage::download($filePath, $fileName));
+            
+            // Check if file is an image
+            if ($this->isImageFile($filePath)) {
+                // Create image entry for images
+                $imageComponents[] = \Filament\Infolists\Components\ImageEntry::make("image_{$key}_{$index}")
+                    ->label($fileName)
+                    ->state($filePath)
+                    ->disk('public')
+                    ->url(fn () => Storage::url($filePath))
+                    ->openUrlInNewTab()
+                    ->height(200)
+                    ->width('auto');
+            } else {
+                // Create action buttons for non-image files
+                $nonImageActions[] = InfolistAction::make("view_file_{$key}_{$index}")
+                    ->label($fileName)
+                    ->icon('heroicon-o-eye')
+                    ->color('primary')
+                    ->url(fn () => Storage::url($filePath))
+                    ->openUrlInNewTab();
+            }
         }
         
-        return Group::make([
-            \Filament\Infolists\Components\TextEntry::make("file_label_{$key}")
-                ->label($key)
-                ->state(count($files) . ' file(s) uploaded')
-                ->columnSpanFull(),
-            Actions::make($actions)
-                ->columnSpanFull()
-        ]);
+        // Add label
+        $components[] = \Filament\Infolists\Components\TextEntry::make("file_label_{$key}")
+            ->label($key)
+            ->state(count($files) . ' file(s) uploaded')
+            ->columnSpanFull();
+        
+        // Add image previews if any
+        if (!empty($imageComponents)) {
+            foreach ($imageComponents as $imageComponent) {
+                $components[] = $imageComponent;
+            }
+        }
+        
+        // Add non-image file actions if any
+        if (!empty($nonImageActions)) {
+            $components[] = Actions::make($nonImageActions)
+                ->columnSpanFull();
+        }
+        
+        return Group::make($components);
+    }
+    
+    /**
+     * Check if a file is an image based on its extension
+     */
+    protected function isImageFile(string $filePath): bool
+    {
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'];
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        return in_array($extension, $imageExtensions);
     }
     
     /**
